@@ -15,3 +15,4 @@ export public_node="$(terraform output public-agents-loadbalancer)"
 dcos cluster setup --username bootstrapuser --password deleteme --no-check ${DCOS_MASTER}
 dcos node
 
+
