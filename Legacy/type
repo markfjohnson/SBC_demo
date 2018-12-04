@@ -1,0 +1,6 @@
+mem_rss_bytes
+mem_rss_bytes{task_name="weblogic-benefits-app2.dept-a"}
+
+Prometheus
+Prometheus
+http://prometheus-0-server.prometheus.autoip.dcos.thisdcos.directory:1025

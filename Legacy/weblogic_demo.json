@@ -1,0 +1,103 @@
+{
+  "env": {
+    "DOMAIN_NAME": "base_domain",
+    "CLUSTER_NAME": "DockerCluster",
+    "APP_NAME": "benefits",
+    "ADMIN_PORT": "7001",
+    "ADMIN_PASS": "Welcome1",
+    "DOMAIN_HOME": "/u01/oracle/user_projects/domains/base_domain",
+    "APP_PKG_FILE": "benefits.war",
+    "ADMIN_NAME": "weblogic"
+  },
+  "labels": {
+    "HAPROXY_GROUP": "external"
+  },
+  "id": "/dept-a/weblogic-benefits-app2",
+  "backoffFactor": 1.15,
+  "backoffSeconds": 1,
+  "cmd": "env | sort && ls -lt /u01/oracle && pwd && mv /mnt/mesos/sandbox/benefits.war /u01/oracle/benefits.war && wlst /u01/oracle/app-deploy.py && startWebLogic.sh",
+  "container": {
+    "portMappings": [
+      {
+        "containerPort": 8001,
+        "hostPort": 0,
+        "labels": {
+          "VIP_0": "/weblogic-app:8001"
+        },
+        "protocol": "tcp",
+        "servicePort": 10100,
+        "name": "weblogic-management-server"
+      },
+      {
+        "containerPort": 5556,
+        "hostPort": 0,
+        "labels": {
+          "VIP_1": "/weblogic-app:5556"
+        },
+        "protocol": "tcp",
+        "servicePort": 10101,
+        "name": "weblogic-administration-server"
+      },
+      {
+        "containerPort": 7001,
+        "hostPort": 0,
+        "labels": {
+          "VIP_2": "/weblogic-app:7001"
+        },
+        "protocol": "tcp",
+        "servicePort": 10102,
+        "name": "weblogic-node-manager"
+      }
+    ],
+    "type": "MESOS",
+    "volumes": [],
+    "docker": {
+      "image": "tkrausjr/1221-appdeploy:v2",
+      "forcePullImage": false,
+      "parameters": []
+    }
+  },
+  "cpus": 1,
+  "disk": 0,
+  "fetch": [
+    {
+      "uri": "http://www.oracle.com/webfolder/technetwork/tutorials/obe/fmw/wls/12c/03-DeployApps/files/benefits.war",
+      "extract": false,
+      "executable": false,
+      "cache": false
+    }
+  ],
+  "healthChecks": [
+    {
+      "gracePeriodSeconds": 300,
+      "ignoreHttp1xx": false,
+      "intervalSeconds": 25,
+      "maxConsecutiveFailures": 3,
+      "portIndex": 0,
+      "timeoutSeconds": 20,
+      "delaySeconds": 15,
+      "protocol": "HTTP",
+      "path": "/benefits/"
+    }
+  ],
+  "instances": 1,
+  "maxLaunchDelaySeconds": 3600,
+  "mem": 2048,
+  "gpus": 0,
+  "networks": [
+    {
+      "mode": "container/bridge"
+    }
+  ],
+  "requirePorts": false,
+  "upgradeStrategy": {
+    "maximumOverCapacity": 1,
+    "minimumHealthCapacity": 1
+  },
+  "killSelection": "YOUNGEST_FIRST",
+  "unreachableStrategy": {
+    "inactiveAfterSeconds": 0,
+    "expungeAfterSeconds": 0
+  },
+  "constraints": []
+}
